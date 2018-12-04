@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
-is-git-repository() { \git rev-parse --is-inside-work-tree 2>/dev/null }
+git/is-available()  >/dev/null 2>/dev/null { git/is-enabled && \git rev-parse --is-inside-work-tree }
+git/is-enabled() { return 0 }
 
 (( ${+gitrp_safeparms} == 1 )) || local -ar gitrp_safeparms=(
     --show-toplevel
@@ -12,7 +13,7 @@ is-git-repository() { \git rev-parse --is-inside-work-tree 2>/dev/null }
 
 # Associations set - git_property_map repo_status_unstaged repo_status_staged repo_subtrees repo_submodule_branches
 # Arrays set       - repo_remotes git_status repo_submodules
-repo-details() {
+git/vcs-details() {
     get-gitinfo() {
         \git remote -v 2>/dev/null || { return 1 }
         print -- --
@@ -38,7 +39,7 @@ repo-details() {
 
     typeset -gA git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( ) repo_subtrees=( ) repo_submodule_branches=( )
     typeset -ga repo_remotes=( ) repo_submodules=( )
-    is-git-repository || return $?
+    git/is-available || return $?
 
     local -a git_remotes=( ) git_props=( ) submod_result=( ) git_submodule_branches=( )
 
@@ -94,4 +95,8 @@ repo-details() {
     typeset -gA git_property_map=( "${(kv)prop_map[@]}" )
 
     if [[ "${git_property_map[remote-branch]}" == '[none]' ]]; then git_property_map[remote-branch]=''; fi
+}
+
+git/vcs-type-icon() {
+
 }

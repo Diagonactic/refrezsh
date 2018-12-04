@@ -17,7 +17,7 @@ reset_test_repos() {
         [[ -n "$1" ]] || return 1
 
         if [[ -n "$1" && -d "$1" && "$1" == /tmp* ]]; then
-            rm -rf "$1/*" "$1/.*" || __fail "Falied to clear repository at: '$1'"
+            rm -rf "$1/*" "$1/.*" || __fail "Failed to clear repository at: '$1'"
             __info "Test repository $1 was reset/removed"
             return 0
         fi
@@ -99,20 +99,20 @@ add-commit() {
     git add . && git commit -m '.'
 }
 
-wrap-repo-details() { safe_execute -xsr 0 repo-details }
+wrap-repo-details() { safe_execute -xsr 0 git/vcs-details }
 
 typeset -Ar empty_staged=( add-len 0 add-paths '' del-len 0 del-paths '' mod-len 0 mod-paths '' ren-len 0 ren-paths '' ) \
           empty_unstaged=( add-len 0 add-paths '' del-len 0 del-paths '' mod-len 0 mod-paths '' ren-len 0 ren-paths '' new-len 0 new-paths '' )
 
 assert/repo-status() {
     (( $# % 2 == 1 )) || __fail "$0: Invalid Usage - Requires 'staged' or 'unstaged' followed by an even number of properties"
-    safe_execute -xsr 0 -- repo-details
+    safe_execute -xsr 0 -- git/vcs-details
     local -A expected_props=( "${(kvP@)${:-empty_$1}}" "${${@:2}[@]}" ) # empty_(un)?staged[@] replaced with $@ keys
     assert/association "repo_status_$1" is-equal-to "${(kv)expected_props[@]}"
 }
 assert/property-map() {
     (( $# % 2 == 0 )) || __fail "$0: Invalid Usage - Requires an even number of properties"
-    safe_execute -xsr 0 -- repo-details
+    safe_execute -xsr 0 -- git/vcs-details
     local -A expected_props=(
             git-dir      .git     git-rev       "${git_property_map[git-rev]}"
             is-submodule 0        parent-repo   ''
@@ -176,7 +176,7 @@ unit_group "submodules" "Repo with remote and submodules"  test_sections {
             safe_execute -xsr 0 -- \git add .
             safe_execute -xsr 0 -- \git commit -m 'Create submodule repository with single sub-module.txt file'
             set-remote "$REPO_ALT" develop "$REPO_REMOTE_ALT"
-            safe_execute -xsr 0 -- repo-details
+            safe_execute -xsr 0 -- git/vcs-details
             assert/clean-status
             assert/property-map local-branch develop has-remotes yes remote-branch origin/develop
             safe_execute -xsr 0 -- git push -q --set-upstream origin develop
@@ -211,7 +211,7 @@ unit_group "empty-no-remote" "Check empty, but valid, git repostiory properties 
             assert/clean-status unstaged
             pushd "$REPO_ALT"
             {
-                safe_execute -xsr 0 repo-details
+                safe_execute -xsr 0 git/vcs-details
                 assert/property-map git-rev detached has-commits 0 has-remotes no
             } always { popd }
         } always { popd }
@@ -266,7 +266,7 @@ unit_group "empty-no-remote-add" "Git repositories with one added file" test_sec
             safe_execute -xsr 0 -- \git add "$REPO/test.txt"
             assert/repo-status staged add-paths test.txt add-len 1
             safe_execute -xsr 0 -- \git fetch -q -a
-            safe_execute -xsr 0 -- repo-details
+            safe_execute -xsr 0 -- git/vcs-details
             assert/property-map has-commits 0 git-rev detached has-remotes no
 
             echo 'blah' > baz.txt
@@ -274,7 +274,7 @@ unit_group "empty-no-remote-add" "Git repositories with one added file" test_sec
             assert/repo-status staged add-paths 'baz.txt:test.txt' add-len 2
             safe_execute -xsr 0 -- \git commit -m 'baz.txt'
             assert/property-map has-commits 1 has-remotes no
-            safe_execute -xsr 0 -- repo-details
+            safe_execute -xsr 0 -- git/vcs-details
 
             assert/property-map has-remotes no
 
@@ -291,7 +291,7 @@ unit_group "empty-no-remote-add" "Git repositories with one added file" test_sec
 
             pushd "$REPO_ALT"
             {
-                safe_execute -x -r 0 repo-details
+                safe_execute -x -r 0 git/vcs-details
                 assert/property-map has-remotes no has-commits 0
                 assert/clean-status both
             } always { popd }
@@ -317,7 +317,7 @@ unit_group "remote-ahead-behind" "Two repositories, various ahead/behind"  test_
 
             pushd "$REPO_ALT"
             {
-                safe_execute -xsr 0 repo-details
+                safe_execute -xsr 0 git/vcs-details
                 assert/property-map git-rev detached has-remotes no has-commits 0
                 safe_execute -xsr 0 -- \git checkout --no-progress -qfB master
                 assert/property-map git-rev detached has-commits 0 has-remotes no
@@ -328,13 +328,13 @@ unit_group "remote-ahead-behind" "Two repositories, various ahead/behind"  test_
                 safe_execute -xsr 0 -- \git pull -q origin master
                 safe_execute -xsr 0 -- \git branch --set-upstream-to=origin/master master
                 safe_execute -xsr 0 \git fetch -q
-                safe_execute -xsr 0 repo-details
+                safe_execute -xsr 0 git/vcs-details
 
                 assert/property-map ahead-by 0 behind-by 0
                 assert/clean-status
 
                 safe_execute -xsr 0 -- add-commit boo.txt
-                safe_execute -xsr 0 -- repo-details
+                safe_execute -xsr 0 -- git/vcs-details
                 assert/property-map ahead-by 1
             } always { popd }
 
@@ -346,11 +346,11 @@ unit_group "remote-ahead-behind" "Two repositories, various ahead/behind"  test_
             pushd "$REPO_ALT"
             {
                 safe_execute -xsr 0 -- \git fetch -q
-                safe_execute -xsr 0 -- repo-details
+                safe_execute -xsr 0 -- git/vcs-details
                 assert/property-map ahead-by 1 behind-by 1
 
                 safe_execute -xsr 0 -- \git pull -q
-                safe_execute -xsr 0 -- repo-details
+                safe_execute -xsr 0 -- git/vcs-details
                 assert/property-map ahead-by 2 behind-by 0
 
                 safe_execute -xsr 0 -- \git push -q
