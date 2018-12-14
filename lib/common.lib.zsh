@@ -198,7 +198,7 @@ declare -gA refrezsh_icons=(
     local-ahead-9-icon      $' \uf8be'
     local-behind-9-icon     $'\uf8be '
     mod-9-icon              $'\uf8be'
-    local-ahead-icon        $' \uf178'
+    local-ahead-icon        $' \uf178 '
     local-behind-icon       $'\uf177 '
     local-ahead-behind-icon $' ⇆ '
     local-synced-icon       $' \uf9e5'
