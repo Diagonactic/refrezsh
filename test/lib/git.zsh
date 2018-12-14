@@ -130,7 +130,7 @@ assert/clean-status() {
     case "${1:-both}" in
         (staged|unstaged)  assert/repo-status "$1" ;;
         (both)      assert/repo-status staged && assert/repo-status unstaged ;;
-        (*)         __fail "Unknown repo type: ${1:-both}"
+        (*)         __fail "Unknown repo type: '$1'"
     esac
 }
 

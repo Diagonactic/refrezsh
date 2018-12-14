@@ -23,7 +23,7 @@ git/vcs-details() {
             return 1
         }
         print -- --
-        \git submodule --quiet foreach 'git rev-parse --show-toplevel --abbrev-ref HEAD'
+        \git submodule --quiet foreach 'git rev-parse --show-toplevel --abbrev-ref HEAD' 2>/dev/null
         print -- --
         \git status --porcelain -b 2>/dev/null
     }
@@ -37,13 +37,18 @@ git/vcs-details() {
         typeset -ga new_argv=( "$@" )
     }
 
-    typeset -gA git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( ) repo_subtrees=( ) repo_submodule_branches=( )
-    typeset -ga repo_remotes=( ) repo_submodules=( )
+    typeset -gA git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( )  repo_submodule_branches=( ) repo_remote_url_to_name=( ) repo_remote_name_to_url=( )
+    typeset -ga repo_remotes=( ) repo_submodules=( ) repo_subtrees=( )
     git/is-available || return $?
 
     local -a git_remotes=( ) git_props=( ) submod_result=( ) git_submodule_branches=( )
 
     () {
+        if (( REFREZSH_IS_DEBUG == 1 )); then
+            print -- "---- Output from git/vcs-details/get-gitinfo ----" >> ~/tmp/last_prompt.info
+            print -l -- "$@" >> ~/tmp/last_prompt.info
+            print -- "-------------------------------------------------" >> ~/tmp/last_prompt.info
+        fi
         local -a new_argv=( )
         store-array-slice git_remotes "$@"
         argv=( "${new_argv[@]}" )
@@ -51,6 +56,9 @@ git/vcs-details() {
             [[ "${argv[1]}" != 'HEAD' ]] || shift
             store-array-slice git_props "$@"; argv=( "${new_argv[@]}" )
         }
+        repo_subtrees=( **/.git(N/on) )
+        (( ${#${(@)repo_subtrees}} == 0 )) || repo_subtrees=( ${(@)${(@)repo_subtrees##.git}:A} )
+
         store-array-slice submod_result "$@"
         argv=( "${new_argv[@]}" )
         typeset -gxa git_status=( "$@" )
@@ -82,8 +90,8 @@ git/vcs-details() {
         typeset -gA repo_submodule_branches=( "${submod_result[@]}" )
     }
 
-    typeset -ga u_ren=( ${(@)${(M)git_status:#([AMDR ]R *)}##???} )  s_ren=( ${(@)${(M)git_status:#M[AMDR ] *}##???} )  \
-                u_mod=( ${(@)${(M)git_status:#([AMDR ]M *)}##???} )  s_mod=( ${(@)${(M)git_status:#R[AMDR ] *}##???} )  \
+    typeset -ga u_ren=( ${(@)${(M)git_status:#([AMDR ]R *)}##???} )  s_ren=( ${(@)${(M)git_status:#R[AMDR ] *}##???} )  \
+                u_mod=( ${(@)${(M)git_status:#([AMDR ]M *)}##???} )  s_mod=( ${(@)${(M)git_status:#M[AMDR ] *}##???} )  \
                 u_add=( ${(@)${(M)git_status:#([AMDR ]A *)}##???} )  s_add=( ${(@)${(M)git_status:#A[AMDR ] *}##???} )  \
                 u_del=( ${(@)${(M)git_status:#([AMDR ]D *)}##???} )  s_del=( ${(@)${(M)git_status:#D[AMDR ] *}##???} )  \
                 u_new=( ${(@)${(M)git_status:#\?\?*}##???} )
@@ -93,10 +101,12 @@ git/vcs-details() {
     for RP in s_{ren,mod,add,del}; do repo_status_staged+=( "${RP##s_}-paths"  "${(j.:.)${(q@)${(P@)RP}}}" "${RP##s_}-len" ${#${(P@)RP}} ); done
 
     typeset -gA git_property_map=( "${(kv)prop_map[@]}" )
-
+    local ITEM='' TAB=$'\t'
+    for ITEM in ${git_remotes[@]}; do
+        repo_remotes+=( "${${ITEM##*$TAB}%% *}" )
+        repo_remote_url_to_name+=( "${repo_remotes[-1]}" "${ITEM%%$TAB*}" )
+        repo_remote_name_to_url+=( "${repo_remote_url_to_name[${repo_remotes[-1]}]}" "${repo_remotes[-1]}" )
+    done
+    set +x
     if [[ "${git_property_map[remote-branch]}" == '[none]' ]]; then git_property_map[remote-branch]=''; fi
-}
-
-git/vcs-type-icon() {
-
 }
