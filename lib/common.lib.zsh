@@ -16,8 +16,8 @@ local FGC=$'\e[38;2;' BGC=$'\e[48;2;'
 declare -gA refrezsh_colors=( )
 () {
     local r0='#fe575f' r1='#d73142' r2='#b10028' r3='#8c000f' r4='#680000' \
-          o0='#f5e775' o1='#ce8e2d' o2='#9f6500' o3='#713f00' o4='#e59d23' \
-          g0='#56cfa9' g1='#1ec667' g2='#00953b' g3='#00660e' g4='#003a10'
+          o0='#faef65' o1='#ce8e2d' o2='#9f6500' o3='#713f00' o4='#453700' \
+          g0='#76efc9' g1='#1ec667' g2='#00953b' g3='#00660e' g4='#003a10'
           #
           local b0='#37b2fc' b1='#2c8bcc' b2='#0068a6' b3='#004781' b4='#00295e'
           declare -gA refrezsh_colors=(
@@ -27,63 +27,19 @@ declare -gA refrezsh_colors=( )
               dir-icon-fg                '#2c8bcc'
               account-group-bg           $b0
               account-group-fg           $b4
-              vcsdirty-group-bg          $o4
-              vcsdirty-group-fg          $b4
-              vcsclean-group-bg          $g0
-              vcsclean-group-fg          $g4
-              tilde-icon-fg              '#8FD8FF'
-              at-icon-fg                 '#ffffff'
+              vcsdirty-group-bg          $o0
+              vcsdirty-group-fg          $o3
+              vcsclean-group-bg          $g3
+              vcsclean-group-fg          $g0
+              tilde-icon-fg              $g0
+              at-icon-fg                 '#000000'
               root-fg                    '#ff0000'
               user-fg                    '#ffffff'
-              # github-icon-fg             '#002244'
-              # bitbucket-icon-fg          '#002244'
-              # keybase-icon-fg            '#002244'
-              # local-changes-icon-fg      '#8c000f'
-              # local-add-icon-fg          '#000000'
-              # local-mod-icon-fg          '#000000'
-              # local-del-icon-fg          '#000000'
-              # local-ren-icon-fg          '#000000'
-              # local-new-u-icon-fg        '#000000'
-              # local-add-u-icon-fg        '#000000'
-              # local-mod-u-icon-fg        '#000000'
-              # local-del-u-icon-fg        '#000000'
-              # local-ren-u-icon-fg        '#000000'
-              # local-ahead-1-icon-fg      '#002244'
-              # local-behind-1-icon-fg     '#002244'
-              # mod-1-icon-fg              '#002244'
-              # local-ahead-2-icon-fg      '#002244'
-              # local-behind-2-icon-fg     '#002244'
-              # mod-2-icon-fg              '#002244'
-              # local-ahead-3-icon-fg      '#002244'
-              # local-behind-3-icon-fg     '#002244'
-              # mod-3-icon-fg              '#002244'
-              # local-ahead-4-icon-fg      '#002244'
-              # local-behind-4-icon-fg     '#002244'
-              # mod-4-icon-fg              '#002244'
-              # local-ahead-5-icon-fg      '#002244'
-              # local-behind-5-icon-fg     '#002244'
-              # mod-5-icon-fg              '#002244'
-              # local-ahead-6-icon-fg      '#002244'
-              # local-behind-6-icon-fg     '#002244'
-              # mod-6-icon-fg              '#002244'
-              # local-ahead-7-icon-fg      '#002244'
-              # local-behind-7-icon-fg     '#002244'
-              # mod-7-icon-fg              '#002244'
-              # local-ahead-8-icon-fg      '#002244'
-              # local-behind-8-icon-fg     '#002244'
-              # mod-8-icon-fg              '#002244'
-              # local-ahead-9-icon-fg      '#002244'
-              # local-behind-9-icon-fg     '#002244'
-              # mod-9-icon-fg              '#002244'
-              # local-ahead-icon-fg        '#002244'
-              # local-behind-icon-fg       '#002244'
-              # local-ahead-behind-icon-fg '#002244'
-
               prompt-start-icon-fg       '#cccccc'
               prompt-end-icon-fg         '#cccccc'
-              submodule-icon-fg          '#002244'
-              subtree-icon-fg            '#aa0000'
-              local-synced-icon-fg       $g3
+              submodule-icon-fg          $b0
+              subtree-icon-fg            '#e00000'
+              local-synced-icon-fg       $g2
               issubmod-icon-fg           $r3
           )
 
