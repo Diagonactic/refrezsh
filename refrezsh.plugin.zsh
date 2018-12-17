@@ -96,6 +96,7 @@ function refrezsh-{debug,load,start,unload,stop,print} {
             #print > ~/tmp/tmp.info # TODO: REMOVE ME
             #prompt-at ~/git/wayward/Documentation
             prompt-at ~/git/zsh-language
+            prompt-at ~/.dotfiles
             print -P "${PROMPT}_"
     esac
 }

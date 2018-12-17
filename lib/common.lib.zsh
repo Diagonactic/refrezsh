@@ -17,7 +17,7 @@ declare -gA refrezsh_colors=( )
 () {
     local r0='#fe575f' r1='#d73142' r2='#b10028' r3='#8c000f' r4='#680000' \
           o0='#faef65' o1='#ce8e2d' o2='#9f6500' o3='#713f00' o4='#453700' \
-          g0='#76efc9' g1='#1ec667' g2='#00953b' g3='#00660e' g4='#003a10'
+          g0='#76ffcf' g1='#1ec667' g2='#00953b' g3='#00660e' g4='#004a20'
           #
           local b0='#37b2fc' b1='#2c8bcc' b2='#0068a6' b3='#004781' b4='#00295e'
           declare -gA refrezsh_colors=(
@@ -32,6 +32,9 @@ declare -gA refrezsh_colors=( )
               vcsclean-group-bg          $g3
               vcsclean-group-fg          $g0
               tilde-icon-fg              $g0
+              git-icon-fg                '#000000'
+              bitbucket-icon-fg          $b4
+              github-icon-fg             '#000000'
               at-icon-fg                 '#000000'
               root-fg                    '#ff0000'
               user-fg                    '#ffffff'
@@ -64,6 +67,15 @@ darken() {
     (( red > 0 )) || red=0
     (( green > 0 )) || green=0
     (( blue > 0 )) || blue=0
+}
+lighten() {
+    typeset -gi {red,green,blue}=0
+    separate-colors "$1"
+    (( red -= $2 )) && (( green -= $2 )) && (( blue -= $2 ))
+    
+    (( red < 255 ))   || red=255
+    (( green < 255 )) || green=25
+    (( blue < 255 ))  || blue=255
 }
 
 () {
@@ -112,7 +124,7 @@ declare -gA refrezsh_icons=(
     vcsclean-sep                 $'\ue0b4\ue0b5 '
     vcsdirty-sep                 $'\ue0b4\ue0b5 '
     github-icon             $'\uf7a3 '
-    keybase-icon            $'\uf084'
+    keybase-icon            $'\ue0a0\uf23e '
     bitbucket-icon          $'\uf171 '
     git-icon                $'\ue0a0'
     at-icon                 $'@'

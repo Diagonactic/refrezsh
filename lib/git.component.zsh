@@ -1,6 +1,14 @@
 #!/usr/bin/env zsh
 
 git/vcs-group() { # $1=NEXT GROUP
+    origin-icon() {
+        case "${1:-${repo_remote_name_to_url[origin]:-}}" in
+            (*github.com[\:/]*)     vcs-icon VCS_ICON github ;;
+            (*bitbucket.org[\:/]*)  vcs-icon VCS_ICON bitbucket ;;
+            (*keybase\:*)          vcs-icon VCS_ICON keybase ;;
+            (*)                     vcs-icon VCS_ICON git ;;
+        esac
+    }
     (( ${git_property_map[behind-by]} > 0 )) && local -ri IS_BEHIND=1 || local -ri IS_BEHIND=0
     (( ${git_property_map[ahead-by]} > 0 ))  && local -ri IS_AHEAD=1  || local -ri IS_AHEAD=0
     (( ${repo_status_staged[add-len]} + ${repo_status_staged[mod-len]} + ${repo_status_staged[del-len]} + ${repo_status_staged[ren-len]} > 0 )) \
@@ -27,12 +35,7 @@ git/vcs-group() { # $1=NEXT GROUP
     local {VCS,LOCAL,ADD,MOD,DEL,REN}{U,}_ICON='' NEWU_ICON=''
     local {{AHEAD,BEHIND}_BY,ARROW,{PUSH_PULL,STATUS,MOD,VCS,TREE}_DIVIDER,TREE,{TREE,MOD}_COUNT,{IS,}SUBMOD}_ICON=''
 
-    local ORIGIN_REMOTE="${repo_remote_name_to_url[origin]:-}"
-    case "$ORIGIN_REMOTE" in
-        (*github.com[\:/]*)     vcs-icon VCS_ICON github ;;
-        (*bitbucket.org[\:/]*)  vcs-icon VCS_ICON bitbucket ;;
-        (*)                     vcs-icon VCS_ICON git ;;
-    esac
+    origin-icon
 
     vcs-icon VCS_DIVIDER "${VCS_GROUP_NAME}-divider"
     if (( HAS_STAGED_CHANGES || HAS_UNSTAGED_CHANGES )); then
