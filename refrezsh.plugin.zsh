@@ -27,7 +27,6 @@ function __refrezsh-prompt() {
     } || new-icon FOLDER_ICON path dir
     new-icon PS_ICON path prompt-start
     new-icon PE_ICON ''   prompt-end
-    #FOLDER_ICON="$FOLDER_ICON"
     local TGT_USER="${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}"
     local LAST_GROUP=''
 
@@ -47,9 +46,8 @@ function __refrezsh-prompt() {
     end-prompt END_GROUP
 
     (( EUID == 0 )) && local PARROW="${refrezsh_icons[root-icon-fg]}${refrezsh_icons[root-icon]}" || local PARROW="${refrezsh_icons[user-icon-fg]}${refrezsh_icons[user-icon]}"
-    PROMPT=$'\e[38;2;255;0;0m'"%(?::  %? )"$'\e[0;37;40m'"$PARROW"$'\e[0;37;40m '
-    print -- "\n$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]} "
-    #RPROMPT=$'\e[38;2;255;0;0m'"%(?::%?)"$'\e[0;37;40m'
+    setopt promptsubst
+    PROMPT=$'\n'"$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]}"$'\n\e[38;2;255;0;0m'"%(?::  %? )"$'\e[0;37;40m'"$PARROW"$'\e[0;37;40m '
     RPROMPT=''
     debug_logs() >> ~/tmp/last_prompt.info {
         dtitle() {
@@ -76,7 +74,7 @@ function __refrezsh-prompt() {
 }
 
 function refrezsh-{debug,load,start,unload,stop,print} {
-    prompt-at() { pushd "$1"; { __refrezsh-prompt } always { popd } }
+    prompt-at() { pushd "$1"; { __refrezsh-prompt; print -n "$PROMPT" } always { popd } }
     case "${0##*-}" in
         (debug)  cat ~/tmp/last_prompt.info > /dev/stderr ;;
         (load|start)
@@ -94,7 +92,6 @@ function refrezsh-{debug,load,start,unload,stop,print} {
             prompt-at ~/git/GP/gripshape-build-automation/gripshape-backend-web
             prompt-at ~/git/alacritty
             #print > ~/tmp/tmp.info # TODO: REMOVE ME
-            #prompt-at ~/git/wayward/Documentation
             prompt-at ~/git/zsh-language
             prompt-at ~/.dotfiles
             print -P "${PROMPT}_"

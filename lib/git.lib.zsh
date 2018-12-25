@@ -90,15 +90,16 @@ git/vcs-details() {
         typeset -gA repo_submodule_branches=( "${submod_result[@]}" )
     }
 
-    typeset -ga u_ren=( ${(@)${(M)git_status:#([AMDR ]R *)}##???} )  s_ren=( ${(@)${(M)git_status:#R[AMDR ] *}##???} )  \
-                u_mod=( ${(@)${(M)git_status:#([AMDR ]M *)}##???} )  s_mod=( ${(@)${(M)git_status:#M[AMDR ] *}##???} )  \
-                u_add=( ${(@)${(M)git_status:#([AMDR ]A *)}##???} )  s_add=( ${(@)${(M)git_status:#A[AMDR ] *}##???} )  \
-                u_del=( ${(@)${(M)git_status:#([AMDR ]D *)}##???} )  s_del=( ${(@)${(M)git_status:#D[AMDR ] *}##???} )  \
+    typeset -ga u_ren=( ${(@)${(M)git_status:#([AMDRU ]R *)}##???} )  s_ren=( ${(@)${(M)git_status:#R[AMDRU ] *}##???} )  \
+                u_mod=( ${(@)${(M)git_status:#([AMDRU ]M *)}##???} )  s_mod=( ${(@)${(M)git_status:#M[AMDRU ] *}##???} )  \
+                u_add=( ${(@)${(M)git_status:#([AMDRU ]A *)}##???} )  s_add=( ${(@)${(M)git_status:#A[AMDRU ] *}##???} )  \
+                u_del=( ${(@)${(M)git_status:#([AMDRU ]D *)}##???} )  s_del=( ${(@)${(M)git_status:#D[AMDRU ] *}##???} )  \
+                u_unm=( ${(@)${(M)git_status:#([AMDRU ]U *)}##???} )  s_unm=( ${(@)${(M)git_status:#U[AMDRU ] *}##???} )  \
                 u_new=( ${(@)${(M)git_status:#\?\?*}##???} )
 
     local RP
-    for RP in u_{ren,mod,add,del,new}; do repo_status_unstaged+=( "${RP##u_}-paths"  "${(j.:.)${(q@)${(P@)RP}}}" "${RP##u_}-len" ${#${(P@)RP}} ); done
-    for RP in s_{ren,mod,add,del}; do repo_status_staged+=( "${RP##s_}-paths"  "${(j.:.)${(q@)${(P@)RP}}}" "${RP##s_}-len" ${#${(P@)RP}} ); done
+    for RP in u_{ren,mod,add,del,new,unm}; do repo_status_unstaged+=( "${RP##u_}-paths"  "${(j.:.)${(q@)${(P@)RP}}}" "${RP##u_}-len" ${#${(P@)RP}} ); done
+    for RP in s_{ren,mod,add,del,unm}; do repo_status_staged+=( "${RP##s_}-paths"  "${(j.:.)${(q@)${(P@)RP}}}" "${RP##s_}-len" ${#${(P@)RP}} ); done
 
     typeset -gA git_property_map=( "${(kv)prop_map[@]}" )
     local ITEM='' TAB=$'\t'
