@@ -72,7 +72,7 @@ lighten() {
     typeset -gi {red,green,blue}=0
     separate-colors "$1"
     (( red -= $2 )) && (( green -= $2 )) && (( blue -= $2 ))
-    
+
     (( red < 255 ))   || red=255
     (( green < 255 )) || green=25
     (( blue < 255 ))  || blue=255
@@ -121,8 +121,8 @@ declare -gA refrezsh_icons=(
     path-sep                $'\ue0b4\ue0b5 '
     account-sep             $'\ue0b4\ue0b5 '
     vcs-sep                 $'\ue0b4\ue0b5 '
-    vcsclean-sep                 $'\ue0b4\ue0b5 '
-    vcsdirty-sep                 $'\ue0b4\ue0b5 '
+    vcsclean-sep            $'\ue0b4\ue0b5 '
+    vcsdirty-sep            $'\ue0b4\ue0b5 '
     github-icon             $'\uf7a3 '
     keybase-icon            $'\ue0a0\uf23e '
     bitbucket-icon          $'\uf171 '

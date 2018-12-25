@@ -43,11 +43,13 @@ git/vcs-group() { # $1=NEXT GROUP
         (( ${repo_status_staged[mod-len]} == 0 ))   || vcs-icon MOD_ICON local-mod
         (( ${repo_status_staged[ren-len]} == 0 ))   || vcs-icon REN_ICON local-ren
         (( ${repo_status_staged[del-len]} == 0 ))   || vcs-icon DEL_ICON local-del
+        (( ${repo_status_staged[unm-len]} == 0 ))   || vcs-icon UNM_ICON local-unm
         (( ${repo_status_unstaged[add-len]} == 0 )) || vcs-icon ADDU_ICON local-add-u
         (( ${repo_status_unstaged[mod-len]} == 0 )) || vcs-icon MODU_ICON local-mod-u
         (( ${repo_status_unstaged[ren-len]} == 0 )) || vcs-icon RENU_ICON local-ren-u
         (( ${repo_status_unstaged[del-len]} == 0 )) || vcs-icon DELU_ICON local-del-u
         (( ${repo_status_unstaged[new-len]} == 0 )) || vcs-icon NEWU_ICON local-new-u
+        (( ${repo_status_unstaged[unm-len]} == 0 )) || vcs-icon UNM_ICON local-unm-u
         STATUS_DIVIDER_ICON="$VCS_DIVIDER"
     fi
     if [[ -n "$repo_submodules" ]]; then
