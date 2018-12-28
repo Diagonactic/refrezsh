@@ -61,8 +61,8 @@ git/vcs-group() { # $1=NEXT GROUP
 
         STATUS_DIVIDER_ICON="$VCS_DIVIDER_ICON"
     fi
-
-    local {MOD_{COUNT,DIVIDER},SUBMOD}_ICON
+    
+    local MOD{,_{COUNT,DIVIDER}}_ICON
     if [[ -n "$repo_submodules" ]]; then
         local -i repo_ct=$(( ${#${repo_submodules[@]}} ))
         (( repo_ct <= 9 )) || repo_ct=9
@@ -72,6 +72,8 @@ git/vcs-group() { # $1=NEXT GROUP
             vcs-icon MOD_ICON submodule
         fi
     fi
+
+    local TREE{,_{COUNT,DIVIDER}}_ICON
     if [[ -n "$repo_subtrees" ]]; then
         local -i repo_ct=$(( ${#${repo_subtrees[@]}} ))
         (( repo_ct <= 9 )) || repo_ct=9
