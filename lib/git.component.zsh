@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 git/vcs-group() { # $1=NEXT GROUP
-
+    setopt localoptions typesetsilent
     typeset -g VCS_GROUP=''
 
     vcs-icon() { new-icon "$1" $VCS_GROUP_NAME "$2"; }
