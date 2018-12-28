@@ -61,30 +61,25 @@ git/vcs-group() { # $1=NEXT GROUP
 
         STATUS_DIVIDER_ICON="$VCS_DIVIDER_ICON"
     fi
-    
+
     local MOD{,_{COUNT,DIVIDER}}_ICON
-    if [[ -n "$repo_submodules" ]]; then
-        local -i repo_ct=$(( ${#${repo_submodules[@]}} ))
-        (( repo_ct <= 9 )) || repo_ct=9
-        if (( repo_ct > 0 )); then
-            MOD_DIVIDER_ICON="$VCS_DIVIDER_ICON"
-            vcs-icon MOD_COUNT_ICON "mod-${repo_ct}"
-            vcs-icon MOD_ICON submodule
-        fi
-    fi
-
     local TREE{,_{COUNT,DIVIDER}}_ICON
-    if [[ -n "$repo_subtrees" ]]; then
-        local -i repo_ct=$(( ${#${repo_subtrees[@]}} ))
-        (( repo_ct <= 9 )) || repo_ct=9
-        if (( repo_ct > 0 )); then
-            TREE_DIVIDER_ICON="$VCS_DIVIDER_ICON"
-            vcs-icon TREE_COUNT_ICON "mod-${repo_ct}"
-            vcs-icon TREE_ICON subtree
-        fi
-    fi
+    function get-{mod,tree}-icons {
+        0="${${0##*-}%%-*}";  1="${(U)0}"  #  mod/tree ... MOD/TREE
+        local ARR_NAME="repo_${${${(M)0:#mod}:+submodules}:-subtrees}" # repo_submodules or repo_subtrees
+        [[ -n "${(P)3}" ]] || return 0
 
-    local {AHEAD,BEHIND}_BY_ICON
+        local -i repo_ct=$(( ${#${(P@)ARR_NAME}} ));  (( repo_ct > 0 ))  || return 0
+
+        (( repo_ct <= 9 )) || repo_ct=9
+        typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
+        vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"
+        vcs-icon "${1}_ICON"       "submodule"
+    }
+
+    get-mod-icons
+    get-tree-icons
+
     ahead-icon
     behind-icon
 
