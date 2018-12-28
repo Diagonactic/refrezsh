@@ -16,6 +16,23 @@ git/vcs-group() { # $1=NEXT GROUP
         esac
     }
 
+    local {AHEAD,BEHIND}_BY_ICON
+    function {ahead,behind}-icon() { #set -x
+        0="${0%%-*}"
+        1="${(U)0}_BY_ICON"
+        2="${git_property_map[$0-by]}"
+        (( $2 > 0 )) || { typeset -g "$1"=''; return 0 }
+        (( $2 < 9 )) || { vcs-icon "$1" "local-$0-9"; return 0 }
+        vcs-icon "$1" "local-$0-$2"
+    }
+
+    local STATUS_ICONS
+    function status-icon() {
+        (( $1 > 0 )) || return 0
+        local ICON; vcs-icon ICON "local-$2"
+        STATUS_ICONS+="$ICON"
+    }
+
     (( ${git_property_map[behind-by]} > 0 )) && local -ri IS_BEHIND=1 || local -ri IS_BEHIND=0
     (( ${git_property_map[ahead-by]}  > 0 )) && local -ri IS_AHEAD=1  || local -ri IS_AHEAD=0
 
@@ -30,31 +47,15 @@ git/vcs-group() { # $1=NEXT GROUP
 
     (( IS_DIRTY )) && local -r VCS_GROUP_NAME='vcsdirty' || VCS_GROUP_NAME='vcsclean'
 
-    local {AHEAD,BEHIND}_BY_ICON
-    function {ahead,behind}-icon() { #set -x
-        0="${0%%-*}"
-        1="${(U)0}_BY_ICON"
-        2="${git_property_map[$0-by]}"
-        (( $2 > 0 )) || { typeset -g "$1"=''; return 0 }
-        (( $2 < 9 )) || { vcs-icon "$1" "local-$0-9"; return 0 }
-        vcs-icon "$1" "local-$0-$2"
-    }
-
     origin-icon
 
     local VCS_DIVIDER_ICON;     vcs-icon VCS_DIVIDER_ICON "${VCS_GROUP_NAME}-divider"
-    local STATUS_ICONS
     if (( HAS_STAGED_CHANGES || HAS_UNSTAGED_CHANGES )); then
-        function status-icon() {
-            (( $1 > 0 )) || return 0
-            local ICON; vcs-icon ICON "local-$2"
-            STATUS_ICONS+="$ICON"
-        }
 
         local {RP,KEY}
         for RP in {ren,mod,add,del,unm}; do
             KEY="${RP}-len"
-            status-icon "${repo_status_unstaged[$KEY]}" "$RP"
+            status-icon "${repo_status_unstaged[$KEY]}" "${RP}-u"
             status-icon "${repo_status_staged[$KEY]}"   "$RP";
         done
         status-icon "${repo_status_unstaged[new-len]}" "$1"
@@ -62,7 +63,7 @@ git/vcs-group() { # $1=NEXT GROUP
         STATUS_DIVIDER_ICON="$VCS_DIVIDER_ICON"
     fi
 
-    local MOD{,_{COUNT,DIVIDER}}_ICON=''
+    local MOD{,_{COUNT,DIVIDER}}_ICON
     local TREE{,_{COUNT,DIVIDER}}_ICON
     function get-{mod,tree}-icons {
         0="${${0##*-}%%-*}";  1="${(U)0}"  #  mod/tree ... MOD/TREE
@@ -72,7 +73,7 @@ git/vcs-group() { # $1=NEXT GROUP
         local -i repo_ct=$(( ${#${(P@)ARR_NAME}} ));  (( repo_ct > 0 ))  || return 0
 
         (( repo_ct <= 9 )) || repo_ct=9
-        typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
+        [[ -n "${(P):-${1}_DIVIDER_ICON}" ]] || typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
         vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"
         vcs-icon "${1}_ICON"       "submodule"
     }
