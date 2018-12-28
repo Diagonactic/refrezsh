@@ -33,6 +33,21 @@ git/vcs-group() { # $1=NEXT GROUP
         STATUS_ICONS+="$ICON"
     }
 
+    local MOD{,_{COUNT,DIVIDER}}_ICON
+    local TREE{,_{COUNT,DIVIDER}}_ICON
+    function get-{mod,tree}-icons {
+        0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  #  mod/tree ... MOD/TREE
+        local ARR_NAME="repo_${2}s" ICON_NAME="$2"                                      # repo_submodules or repo_subtrees / submodule or subtree
+        [[ -n "${(P)ARR_NAME}" ]] || return 0
+
+        local -i repo_ct=$(( ${#${(P@)ARR_NAME}} ));  (( repo_ct > 0 ))  || return 0
+
+        (( repo_ct <= 9 )) || repo_ct=9
+        [[ -n "${(P):-${1}_DIVIDER_ICON}" ]] || typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
+        vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"   # This is *always* `mod`
+        vcs-icon "${1}_ICON"       "$ICON_NAME"
+    }
+
     (( ${git_property_map[behind-by]} > 0 )) && local -ri IS_BEHIND=1 || local -ri IS_BEHIND=0
     (( ${git_property_map[ahead-by]}  > 0 )) && local -ri IS_AHEAD=1  || local -ri IS_AHEAD=0
 
@@ -58,34 +73,19 @@ git/vcs-group() { # $1=NEXT GROUP
             status-icon "${repo_status_unstaged[$KEY]}" "${RP}-u"
             status-icon "${repo_status_staged[$KEY]}"   "$RP";
         done
-        status-icon "${repo_status_unstaged[new-len]}" "$1"
 
+        status-icon "${repo_status_unstaged[new-len]}" "$1"
         STATUS_DIVIDER_ICON="$VCS_DIVIDER_ICON"
     fi
-
-    local MOD{,_{COUNT,DIVIDER}}_ICON
-    local TREE{,_{COUNT,DIVIDER}}_ICON
-    function get-{mod,tree}-icons {
-        0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  #  mod/tree ... MOD/TREE
-        local ARR_NAME="repo_${2}s" ICON_NAME="$2"                                      # repo_submodules or repo_subtrees / submodule or subtree
-        [[ -n "${(P)ARR_NAME}" ]] || return 0
-
-        local -i repo_ct=$(( ${#${(P@)ARR_NAME}} ));  (( repo_ct > 0 ))  || return 0
-
-        (( repo_ct <= 9 )) || repo_ct=9
-        [[ -n "${(P):-${1}_DIVIDER_ICON}" ]] || typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
-        vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"   # This is *always* `mod`
-        vcs-icon "${1}_ICON"       "$ICON_NAME"
-    }
 
     get-mod-icons
     get-tree-icons
 
     ahead-icon
     behind-icon
-
-    local {PUSH_PULL_DIVIDER,ARROW}_ICON
-    PUSH_PULL_DIVIDER_ICON="$VCS_DIVIDER_ICON"
+    local PUSH_PULL_DIVIDER_ICON="$VCS_DIVIDER_ICON"
+    
+    local ARROW_ICON
     if (( IS_AHEAD || IS_BEHIND )); then
         if   (( IS_AHEAD && IS_BEHIND )); then  vcs-icon ARROW_ICON local-ahead-behind;
         elif (( IS_AHEAD )); then               vcs-icon ARROW_ICON local-ahead
