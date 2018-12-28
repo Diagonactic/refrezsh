@@ -62,7 +62,7 @@ git/vcs-group() { # $1=NEXT GROUP
         STATUS_DIVIDER_ICON="$VCS_DIVIDER_ICON"
     fi
 
-    local MOD{,_{COUNT,DIVIDER}}_ICON
+    local MOD{,_{COUNT,DIVIDER}}_ICON=''
     local TREE{,_{COUNT,DIVIDER}}_ICON
     function get-{mod,tree}-icons {
         0="${${0##*-}%%-*}";  1="${(U)0}"  #  mod/tree ... MOD/TREE
