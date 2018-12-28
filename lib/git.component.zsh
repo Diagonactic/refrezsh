@@ -66,16 +66,16 @@ git/vcs-group() { # $1=NEXT GROUP
     local MOD{,_{COUNT,DIVIDER}}_ICON
     local TREE{,_{COUNT,DIVIDER}}_ICON
     function get-{mod,tree}-icons {
-        0="${${0##*-}%%-*}";  1="${(U)0}"  #  mod/tree ... MOD/TREE
-        local ARR_NAME="repo_${${${(M)0:#mod}:+submodules}:-subtrees}" # repo_submodules or repo_subtrees
-        [[ -n "${(P)3}" ]] || return 0
+        0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  #  mod/tree ... MOD/TREE
+        local ARR_NAME="repo_${2}s" ICON_NAME="$2"                                      # repo_submodules or repo_subtrees / submodule or subtree
+        [[ -n "${(P)ARR_NAME}" ]] || return 0
 
         local -i repo_ct=$(( ${#${(P@)ARR_NAME}} ));  (( repo_ct > 0 ))  || return 0
 
         (( repo_ct <= 9 )) || repo_ct=9
         [[ -n "${(P):-${1}_DIVIDER_ICON}" ]] || typeset -g "${1}_DIVIDER_ICON"="$VCS_DIVIDER_ICON"
-        vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"
-        vcs-icon "${1}_ICON"       "submodule"
+        vcs-icon "${1}_COUNT_ICON" "mod-${repo_ct}"   # This is *always* `mod`
+        vcs-icon "${1}_ICON"       "$ICON_NAME"
     }
 
     get-mod-icons
