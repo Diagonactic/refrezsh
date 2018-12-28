@@ -29,7 +29,9 @@ function __refrezsh-prompt() {
     new-icon PE_ICON ''   prompt-end
     local TGT_USER="${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}"
     local LAST_GROUP=''
-
+    if [[ "$CURRENT_PATH" == "$PWD" ]]; then
+        CURRENT_PATH=''
+    fi
     new-group PATH_GROUP path "$FOLDER_ICON$CURRENT_PATH"
 
     new-icon  AT_ICON account at
@@ -91,7 +93,6 @@ function refrezsh-{debug,load,start,unload,stop,print} {
             prompt-at ~/git/GP/gripshape-build-automation
             prompt-at ~/git/GP/gripshape-build-automation/gripshape-backend-web
             prompt-at ~/git/alacritty
-            #print > ~/tmp/tmp.info # TODO: REMOVE ME
             prompt-at ~/git/zsh-language
             prompt-at ~/.dotfiles
             print -P "${PROMPT}_"

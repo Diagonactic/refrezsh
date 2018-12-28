@@ -44,6 +44,8 @@ declare -gA refrezsh_colors=( )
               subtree-icon-fg            '#e00000'
               local-synced-icon-fg       $g2
               issubmod-icon-fg           $r3
+              local-unm-u-icon-fg        $r0
+              local-unm-icon-fg          $r0
           )
 
 }
@@ -134,11 +136,13 @@ declare -gA refrezsh_icons=(
     local-mod-icon          $'\ufbfd '
     local-del-icon          $'\uf875 '
     local-ren-icon          $'\uf109'
+    local-unm-icon          $'\uf5f7'
     local-add-u-icon        $'\uf918'
     local-mod-u-icon        $'\ufc74 '
     local-del-u-icon        $'\uf876 '
     local-ren-u-icon        $'\uf109'
     local-new-u-icon        $'\uf917'
+    local-unm-u-icon        $'\uf5f7'
     local-ahead-1-icon      $' \uf8a3'
     local-behind-1-icon     $'\uf8a3 '
     mod-1-icon              $'\uf8a3'
