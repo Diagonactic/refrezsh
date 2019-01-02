@@ -183,6 +183,8 @@ declare -gA refrezsh_icons=(
     issubmod-icon           $'\uf827 '
     root-icon               $'\uf292'
     user-icon               $'\uf155'
+    rootaccount-icon        $'👮\uf992'
+    account-icon            $'👮\uf2bd'
 )
 
 
