@@ -27,6 +27,8 @@ declare -gA refrezsh_colors=( )
               dir-icon-fg                '#2c8bcc'
               account-group-bg           $b0
               account-group-fg           $b4
+              rootaccount-group-bg       $r2
+              rootaccount-group-fg       $o4
               vcsdirty-group-bg          $o0
               vcsdirty-group-fg          $o3
               vcsclean-group-bg          $g3
@@ -197,6 +199,9 @@ new-group() { # 1- refvar 2- group name 3- next group name 4- group value
 new-icon() { #local REFVAR="$1" GROUP_NAME ICON_NAME APPEND_VAL
     4="${4:-}"
     typeset -g "$1"="${refrezsh_tc[$3-icon-fg]}${refrezsh_icons[$3-icon]}${refrezsh_tc[$2-group-fg]}$4"
+}
+new-icon-if-else() { # '(( 1 == 1 ))' refvar group-name true-icon-name false-icon-name append-val
+    eval "$1" && new-icon "${(@)argv[2,-3]}" "${argv[-1]}" || new-icon "${(@)argv[2,-4]}" "${(@)argv[-2,-1]}"
 }
 
 end-prompt() {

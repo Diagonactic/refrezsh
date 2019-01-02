@@ -1,9 +1,11 @@
 #!/usr/bin/env zsh
 
 account/account-group() {
-    local TGT_USER="${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}" {AT,ACCOUNT,U}_ICON
+    local IS_ROOT="${${${(M)EUID:#0}:+1}:-0}" {AT,ACCOUNT,U}_ICON
+    local TGT_USER="${${SUDO_USER:+root($SUDO_USER)}:-$USER}"
+    local TGT_NAME="${${${IS_ROOT:#1}:-root}##*0}account"
 
-    [[ -z "$SUDO_USER" ]] && new-icon U_ICON account user || new-icon U_ICON account root
-    new-icon  AT_ICON account at
-    new-group ACCOUNT_GROUP account "${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}$AT_ICON$HOST"
+    new-icon-if-else '(( EUID == 0 ))' U_ICON "$TGT_NAME" root user
+    
+    new-group ACCOUNT_GROUP "$TGT_NAME" "$U_ICON${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}$AT_ICON$HOST"
 }
