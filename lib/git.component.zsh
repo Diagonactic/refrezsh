@@ -16,7 +16,7 @@ git/vcs-group() { # $1=NEXT GROUP
         esac
     }
 
-    local {AHEAD,BEHIND}_BY_ICON
+    local {AHEAD,BEHIND}_BY_ICON=''
     function {ahead,behind}-icon() { #set -x
         0="${0%%-*}"
         1="${(U)0}_BY_ICON"
