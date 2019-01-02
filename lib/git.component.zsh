@@ -36,7 +36,7 @@ git/vcs-group() { # $1=NEXT GROUP
     local MOD{,_{COUNT,DIVIDER}}_ICON
     local TREE{,_{COUNT,DIVIDER}}_ICON
     function get-{mod,tree}-icons {
-        0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  #  mod/tree ... MOD/TREE
+        0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  # mod/tree ... MOD/TREE
         local ARR_NAME="repo_${2}s" ICON_NAME="$2"                                      # repo_submodules or repo_subtrees / submodule or subtree
         [[ -n "${(P)ARR_NAME}" ]] || return 0
 
@@ -84,7 +84,7 @@ git/vcs-group() { # $1=NEXT GROUP
     ahead-icon
     behind-icon
     local PUSH_PULL_DIVIDER_ICON="$VCS_DIVIDER_ICON"
-    
+
     local ARROW_ICON
     if (( IS_AHEAD || IS_BEHIND )); then
         if   (( IS_AHEAD && IS_BEHIND )); then  vcs-icon ARROW_ICON local-ahead-behind;
