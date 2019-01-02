@@ -33,8 +33,7 @@ git/vcs-group() { # $1=NEXT GROUP
         STATUS_ICONS+="$ICON"
     }
 
-    local MOD{,_{COUNT,DIVIDER}}_ICON
-    local TREE{,_{COUNT,DIVIDER}}_ICON
+    local MOD{,_{COUNT,DIVIDER}}_ICON TREE{,_{COUNT,DIVIDER}}_ICON
     function get-{mod,tree}-icons {
         0="${${0##*-}%%-*}";  1="${(U)0}";  2="${${${(M)0:#mod}:+submodule}:-subtree}"  # mod/tree ... MOD/TREE
         local ARR_NAME="repo_${2}s" ICON_NAME="$2"                                      # repo_submodules or repo_subtrees / submodule or subtree
