@@ -12,7 +12,7 @@ source "${THEME_LIB_PATH}/account.component.zsh"
 declare -hgx REFREZSH_MODE="${1:-print}"
 
 function __refrezsh-prompt() {
-    local {PATH,ACCOUNT,VCS,NEXT,END}_GROUP=''
+    local {PATH,ACCOUNT,VCS,NEXT,LAST,END}_GROUP=''
 
     if [[ "$REFREZSH_MODE" == print ]]; then
         REFREZSH_IS_DEBUG=1
@@ -22,8 +22,8 @@ function __refrezsh-prompt() {
         print -- > ~/tmp/last_prompt.info
     fi
 
-    path/path-group
-    account/account-group    
+    path/path-group    
+    account/account-group
 
     # Version Control Component
     local -A git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( ) repo_submodule_branches=( ) repo_remote_url_to_name=( ) repo_remote_name_to_url=( )

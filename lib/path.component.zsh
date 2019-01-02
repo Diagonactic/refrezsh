@@ -13,8 +13,6 @@ path/path-group() {
     new-icon PE_ICON ''   prompt-end
 
     local LAST_GROUP=''
-    if [[ "$CURRENT_PATH" == "$PWD" ]]; then
-        CURRENT_PATH=''
-    fi
+    [[ "$CURRENT_PATH" != "$PWD" ]] || CURRENT_PATH=''
     new-group PATH_GROUP path "$FOLDER_ICON$CURRENT_PATH"
 }
