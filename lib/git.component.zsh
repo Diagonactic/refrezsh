@@ -64,7 +64,7 @@ git/vcs-group() { # $1=NEXT GROUP
 
     origin-icon
 
-    local VCS_DIVIDER_ICON;     vcs-icon VCS_DIVIDER_ICON "${VCS_GROUP_NAME}-divider"
+    local {STATUS,VCS}_DIVIDER_ICON;     vcs-icon VCS_DIVIDER_ICON "${VCS_GROUP_NAME}-divider"
     if (( HAS_STAGED_CHANGES || HAS_UNSTAGED_CHANGES )); then
 
         local {RP,KEY}
@@ -99,5 +99,7 @@ git/vcs-group() { # $1=NEXT GROUP
         vcs-icon ISMOD_ICON issubmod
     fi
 
-    new-group VCS_GROUP $VCS_GROUP_NAME "$VCS_ICON$ISMOD_ICON$VCS_DIVIDER_ICON$MOD_COUNT_ICON$MOD_ICON$MOD_DIVIDER_ICON$TREE_COUNT_ICON$TREE_ICON$TREE_DIVIDER_ICON$STATUS_ICONS$STATUS_DIVIDER_ICON${git_property_map[local-branch]}${refrezsh_tc[vcs-group-fg]}$AHEAD_BY_ICON$ARROW_ICON$BEHIND_BY_ICON${git_property_map[remote-branch]} ${refrezsh_tc[vcs-group-rfg]}"
+    local MODULES_SUBGROUP="$ISMOD_ICON$VCS_DIVIDER_ICON$MOD_COUNT_ICON$MOD_ICON$MOD_DIVIDER_ICON$TREE_COUNT_ICON$TREE_ICON$TREE_DIVIDER_ICON"
+    local REPO_DETAILS_SUBGROUP="${git_property_map[local-branch]}${refrezsh_tc[vcs-group-fg]}$AHEAD_BY_ICON$ARROW_ICON$BEHIND_BY_ICON${git_property_map[remote-branch]} ${refrezsh_tc[vcs-group-rfg]}"
+    new-group VCS_GROUP $VCS_GROUP_NAME "$VCS_ICON$MODULES_SUBGROUP$STATUS_ICONS$STATUS_DIVIDER_ICON$REPO_DETAILS_SUBGROUP"
 }
