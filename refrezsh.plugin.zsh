@@ -7,9 +7,13 @@ declare THEME_LIB_PATH="${THEME_ROOT}/lib"
 source "${THEME_LIB_PATH}/common.lib.zsh"
 source "${THEME_LIB_PATH}/git.lib.zsh"
 source "${THEME_LIB_PATH}/git.component.zsh"
+source "${THEME_LIB_PATH}/path.component.zsh"
+source "${THEME_LIB_PATH}/account.component.zsh"
 declare -hgx REFREZSH_MODE="${1:-print}"
 
 function __refrezsh-prompt() {
+    local {PATH,ACCOUNT,VCS,NEXT,END}_GROUP=''
+
     if [[ "$REFREZSH_MODE" == print ]]; then
         REFREZSH_IS_DEBUG=1
         export REFREZSH_IS_DEBUG
@@ -17,25 +21,9 @@ function __refrezsh-prompt() {
     if (( REFREZSH_IS_DEBUG == 1 )); then
         print -- > ~/tmp/last_prompt.info
     fi
-    local {PATH,ACCOUNT,VCS,NEXT,END}_GROUP='' {PS,PE,FOLDER,TILDE,AT,VCS}_ICON=''
 
-    local CURRENT_PATH="${${${(M)PWD:#$HOME*}:+${refrezsh_icons[homedir-tilde]}${PWD##$HOME}}:-$PWD}"
-    [[ "$PWD" == "$HOME"* ]] && {
-        new-icon FOLDER_ICON path homedir
-        new-icon TILDE_ICON path tilde
-        FOLDER_ICON+=" $TILDE_ICON"
-    } || new-icon FOLDER_ICON path dir
-    new-icon PS_ICON path prompt-start
-    new-icon PE_ICON ''   prompt-end
-    local TGT_USER="${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}"
-    local LAST_GROUP=''
-    if [[ "$CURRENT_PATH" == "$PWD" ]]; then
-        CURRENT_PATH=''
-    fi
-    new-group PATH_GROUP path "$FOLDER_ICON$CURRENT_PATH"
-
-    new-icon  AT_ICON account at
-    new-group ACCOUNT_GROUP account "${${SUDO_USER:+$USER($SUDO_USER)}:-$USER}$AT_ICON$HOST"
+    path/path-group
+    account/account-group    
 
     # Version Control Component
     local -A git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( ) repo_submodule_branches=( ) repo_remote_url_to_name=( ) repo_remote_name_to_url=( )
@@ -49,7 +37,7 @@ function __refrezsh-prompt() {
 
     (( EUID == 0 )) && local PARROW="${refrezsh_icons[root-icon-fg]}${refrezsh_icons[root-icon]}" || local PARROW="${refrezsh_icons[user-icon-fg]}${refrezsh_icons[user-icon]}"
     setopt promptsubst
-    PROMPT=$'\n'"$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]}"$'\n\e[38;2;255;0;0m'"%(?::  %? )"$'\e[0;37;40m'"$PARROW"$'\e[0;37;40m '
+    PROMPT=$'\n'"$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]}"$'\n\e[38;2;255;0;0m'"%(?:: %? )"$'\e[0;37;40m'"$PARROW"$'\e[0;37;40m '
     RPROMPT=''
     debug_logs() >> ~/tmp/last_prompt.info {
         dtitle() {
