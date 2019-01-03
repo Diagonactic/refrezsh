@@ -11,6 +11,24 @@ git/is-enabled() { return 0 }
 )
 # NOTE: --show-superproject-working-tree This must be last; it returns nothing (not even a blank line) when there's no submodule
 
+# Checks whether or not the last call to git/vcs-details occurred from $PWD
+git/default-git_property_map() {
+    typeset -gA git_property_map=(
+        nearest-root    ''
+        git-rev         ''
+        local-branch    ''
+        remote-branch "${${${${(M)REPO_CONFIG:#* on *}:+[none]}:-${REPO_CONFIG##*...}}%%[[:space:]\[]*}"
+        has-commits   "${${${(M)REPO_CONFIG:#No commits yet on *}:+0}:-1}"
+        has-remotes   "${${${(M)${#git_remotes[@]}:#0}:+no}:-yes}"
+        ahead-by      "${${${(M)REPO_CONFIG:#*\[ahead*}:+${${REPO_CONFIG##*\[ahead[[:space:]]}%%[\],]*}}:-0}"
+        behind-by     "${${${(M)REPO_CONFIG:#*(\[|, )behind*}:+${${REPO_CONFIG##*(\[|, )behind[[:space:]]}%%[\],]*}}:-0}"
+        git-dir       "${${${git_props[3]}:A}##${git_props[2]}/}"
+        is-bare       "${${${(M)${git_props[4]}:#true}:+1}:-0}"
+        parent-repo   "${git_props[5]:-}"
+        git-prop-dir  "${PWD}"
+        is-submodule  0
+    )
+}
 # Associations set - git_property_map repo_status_unstaged repo_status_staged repo_subtrees repo_submodule_branches
 # Arrays set       - repo_remotes git_status repo_submodules
 git/vcs-details() {
@@ -39,7 +57,10 @@ git/vcs-details() {
 
     typeset -gA git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( )  repo_submodule_branches=( ) repo_remote_url_to_name=( ) repo_remote_name_to_url=( )
     typeset -ga repo_remotes=( ) repo_submodules=( ) repo_subtrees=( )
-    git/is-available || return $?
+    git/is-available || {
+
+        return $?
+    }
 
     local -a git_remotes=( ) git_props=( ) submod_result=( ) git_submodule_branches=( )
 
@@ -79,6 +100,7 @@ git/vcs-details() {
         git-dir       "${${${git_props[3]}:A}##${git_props[2]}/}"
         is-bare       "${${${(M)${git_props[4]}:#true}:+1}:-0}"
         parent-repo   "${git_props[5]:-}"
+        git-prop-dir  "${PWD}"
         is-submodule  0
     )
 
