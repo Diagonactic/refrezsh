@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-account/account-group() { set -x
+account/account-group() { 
     local IS_ROOT="${${${(M)EUID:#0}:+1}:-0}" {AT,ACCOUNT,U}_ICON
     local TGT_USER="${${SUDO_USER:+root($SUDO_USER)}:-$USER}"
     local TGT_NAME="${${${IS_ROOT:#1}:-root}##*0}account"
