@@ -13,7 +13,9 @@ declare -hgx REFREZSH_MODE="${1:-print}"
 
 function __refrezsh-prompt() {
     local {PATH,ACCOUNT,VCS,NEXT,LAST,END}_GROUP=''
-
+    local PE_ICON
+    new-icon PE_ICON ''   prompt-end
+    
     if [[ "$REFREZSH_MODE" == print ]]; then
         REFREZSH_IS_DEBUG=1
         export REFREZSH_IS_DEBUG
@@ -22,7 +24,7 @@ function __refrezsh-prompt() {
         print -- > ~/tmp/last_prompt.info
     fi
 
-    path/path-group    
+    path/path-group
     account/account-group
 
     # Version Control Component

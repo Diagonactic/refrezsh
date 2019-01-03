@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-path/path-group() {
-    local  {PS,PE,FOLDER,TILDE,AT,VCS}_ICON=''    
+path/path-group() { #set -x
+    local  {PS,FOLDER,TILDE,AT,VCS}_ICON=''
     local CURRENT_PATH="${${${(M)PWD:#$HOME*}:+${refrezsh_icons[homedir-tilde]}${PWD##$HOME}}:-$PWD}"
 
     [[ "$PWD" == "$HOME"* ]] && {
@@ -11,8 +11,6 @@ path/path-group() {
     } || new-icon FOLDER_ICON path dir
 
     new-icon PS_ICON path prompt-start
-    new-icon PE_ICON ''   prompt-end
 
-    [[ "$CURRENT_PATH" != "$PWD" ]] || CURRENT_PATH=''
     new-group PATH_GROUP path "$FOLDER_ICON$CURRENT_PATH"
 }

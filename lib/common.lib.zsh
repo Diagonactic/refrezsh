@@ -113,7 +113,7 @@ declare -gA refrezsh_codes=(
     fg-1 $''
 )
 declare -gA refrezsh_icons=(
-    dir-icon                $'\uf74a'
+    dir-icon                $'\uf74a '
     prompt-start-icon       $'\uff62'
     prompt-end-icon         $'\u23a3'
     homedir-icon            $'\uf74b'
