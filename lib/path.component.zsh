@@ -8,6 +8,7 @@ path/path-group() { #set -x
         new-icon FOLDER_ICON path homedir
         new-icon TILDE_ICON path tilde
         FOLDER_ICON+=" $TILDE_ICON"
+        if [[ "$PWD" == "$HOME" ]]; then CURRENT_PATH=''; fi
     } || new-icon FOLDER_ICON path dir
 
     new-icon PS_ICON path prompt-start

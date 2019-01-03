@@ -27,8 +27,8 @@ declare -gA refrezsh_colors=( )
               dir-icon-fg                '#2c8bcc'
               account-group-bg           $b0
               account-group-fg           $b4
-              rootaccount-group-bg       $r2
-              rootaccount-group-fg       $o4
+              rootaccount-group-bg       $r1
+              rootaccount-group-fg       $b4
               vcsdirty-group-bg          $o0
               vcsdirty-group-fg          $o3
               vcsclean-group-bg          $g3
@@ -124,6 +124,7 @@ declare -gA refrezsh_icons=(
     account-icon            $'\uf2bd'
     path-sep                $'\ue0b4\ue0b5 '
     account-sep             $'\ue0b4\ue0b5 '
+    rootaccount-sep             $'\ue0b4\ue0b5 '
     vcs-sep                 $'\ue0b4\ue0b5 '
     vcsclean-sep            $'\ue0b4\ue0b5 '
     vcsdirty-sep            $'\ue0b4\ue0b5 '
