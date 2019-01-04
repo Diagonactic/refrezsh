@@ -15,7 +15,7 @@ function __refrezsh-prompt() {
     local {PATH,ACCOUNT,VCS,NEXT,LAST,END}_GROUP=''
     local PE_ICON
     new-icon PE_ICON ''   prompt-end
-    
+
     if [[ "$REFREZSH_MODE" == print ]]; then
         REFREZSH_IS_DEBUG=1
         export REFREZSH_IS_DEBUG
@@ -75,6 +75,8 @@ function refrezsh-{debug,load,start,unload,stop,print} {
             add-zsh-hook -d precmd __refrezsh-prompt
             unfunction refrezsh-debug refrezsh-unload refrezsh-load
             autoload refrezsh-load
+            ;;
+        (install-root)
             ;;
         (print)
             print -- $'\e[0m\e[0;37m\e[0;40m'

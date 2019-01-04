@@ -124,7 +124,7 @@ declare -gA refrezsh_icons=(
     account-icon            $'\uf2bd'
     path-sep                $'\ue0b4\ue0b5 '
     account-sep             $'\ue0b4\ue0b5 '
-    rootaccount-sep             $'\ue0b4\ue0b5 '
+    rootaccount-sep         $'\ue0b4\ue0b5 '
     vcs-sep                 $'\ue0b4\ue0b5 '
     vcsclean-sep            $'\ue0b4\ue0b5 '
     vcsdirty-sep            $'\ue0b4\ue0b5 '
@@ -184,10 +184,33 @@ declare -gA refrezsh_icons=(
     issubmod-icon           $'\uf827 '
     root-icon               $'\uf292'
     user-icon               $'\uf155'
-    rootaccount-icon        $'\uf992 '
+    rootaccount-icon        $'\uf992'
     account-icon            $'\uf2bd '
 )
 
+typeset -p _zshrc_config_map > /dev/null 2>&1 || typeset -gAr _zshrc_config_map=(
+    error         $'\e[1;91m'
+    error_text    $'\e[1;97m'
+    error_success 0
+
+    info          $'\e[1;95m'
+    info_text     $'\e[0;37m'
+    info_success  1
+
+    warn          $'\e[1;93m'
+    warn_text     $'\e[1;97m'
+    warn_success  0
+
+    brackets      $'\e[1;90m'
+    reset         $'\e[0m\e[0;37m'
+)
+
+print-{info,warn,error}() {
+    (( ${+1} == 1 )) || return 2
+    local KIND="${0##*-}"; local TAG="${_zshrc_config_map[brackets]}[${_zshrc_config_map[$KIND]}${(U)KIND}${_zshrc_config_map[brackets]}] ${_zshrc_config_map[${KIND}_text]}";
+    print -- "$TAG$1"
+}
+try-link() { ln -s "$1" "$2" && print-info "Symlinked $1 to $2" || die "Failed to symlink $1 to $2"; }
 
 new-group() { # 1- refvar 2- group name 3- next group name 4- group value
 
