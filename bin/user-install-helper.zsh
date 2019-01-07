@@ -5,6 +5,7 @@
     is-installed() { which "$1" > /dev/null 2>&1; }
     install-zplugin() {
         print-info "Installing zdharma/zplugin"
+        # Yes, I've been put in jail for this
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"     || die "Failed to install zplugin for $USER"
     }
     install-zmod() {

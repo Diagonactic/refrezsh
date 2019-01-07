@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+
+
 () {
     local EXPECTED_REFREZSH_PATH="$HOME/.zplugin/plugins/Diagonactic---refrezsh"
     local TARGET_REFREZSH_PATH="/usr/local/src/refrezsh"
@@ -23,5 +25,5 @@
         move-link-refrezsh
     fi
     print-info "Installing for root (you may be prompted for a password)"
-    sudo "$THEME_ROOT/user-install.zsh"
+    sudo "$THEME_ROOT/user-install-helper.zsh"
 } "$@"
