@@ -39,7 +39,7 @@ function __refrezsh-prompt() {
 
     (( EUID == 0 )) && local PARROW="${refrezsh_icons[root-icon-fg]}${refrezsh_icons[root-icon]}" || local PARROW="${refrezsh_icons[user-icon-fg]}${refrezsh_icons[user-icon]}"
     setopt promptsubst
-    PROMPT=$'\n'"$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]}"$'\n\e[38;2;255;0;0m'"%(?:: %? )"$'\e[0;37;40m'"$PARROW"$'\e[0;37;40m '
+    PROMPT=$'\n'"$PATH_GROUP$ACCOUNT_GROUP$VCS_GROUP$END_GROUP ${refrezsh[prompt-end]}"$'\n%{\e[38;2;255;0;0m%}'"%(?:: %? )"$'%{\e[0;37;40m%}'"$PARROW"$'%{\e[0;37;40m%} '
     RPROMPT=''
     debug_logs() >> ~/tmp/last_prompt.info {
         dtitle() {

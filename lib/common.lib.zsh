@@ -182,8 +182,10 @@ declare -gA refrezsh_icons=(
     vcsclean-divider-icon   $'\uf142'
     vcsdirty-divider-icon   $'\uf142'
     issubmod-icon           $'\uf827 '
-    root-icon               $'\uf292'
-    user-icon               $'\uf155'
+    root-icon               $'#'
+    user-icon               $'$'
+    #root-icon               $'\uf292'
+    #user-icon               $'\uf155'
     rootaccount-icon        $'\uf992'
     account-icon            $'\uf2bd '
 )
