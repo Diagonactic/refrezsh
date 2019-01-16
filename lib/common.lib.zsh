@@ -188,6 +188,7 @@ declare -gA refrezsh_icons=(
     #user-icon               $'\uf155'
     rootaccount-icon        $'\uf992'
     account-icon            $'\uf2bd '
+    ssh-icon                $'\uf983'
 )
 
 typeset -p _zshrc_config_map > /dev/null 2>&1 || typeset -gAr _zshrc_config_map=(
