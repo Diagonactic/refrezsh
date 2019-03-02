@@ -4,6 +4,8 @@ declare REFREZSH_PLUGIN_PATH="${${(%):-%x}:A}"
 declare THEME_ROOT="${REFREZSH_PLUGIN_PATH:h}"
 declare THEME_LIB_PATH="${THEME_ROOT}/lib"
 
+export REFREZSH_IS_DEBUG=0
+
 source "${THEME_LIB_PATH}/common.lib.zsh"
 source "${THEME_LIB_PATH}/git.lib.zsh"
 source "${THEME_LIB_PATH}/git.component.zsh"
@@ -16,10 +18,6 @@ function __refrezsh-prompt() {
     local PE_ICON
     new-icon PE_ICON ''   prompt-end
 
-    if [[ "$REFREZSH_MODE" == print ]]; then
-        REFREZSH_IS_DEBUG=1
-        export REFREZSH_IS_DEBUG
-    fi
     if (( REFREZSH_IS_DEBUG == 1 )); then
         print -- > ~/tmp/last_prompt.info
     fi
@@ -71,12 +69,28 @@ function __refrezsh-prompt() {
 }
 
 function refrezsh-{debug,load,start,unload,stop,print} {
-    prompt-at() { pushd "$1"; { __refrezsh-prompt; print -n "$PROMPT" } always { popd } }
+    prompt-at() {
+        one-prompt-at() {
+            pushd "$1"
+            {
+                __refrezsh-prompt; print -n "$PROMPT"
+            } always { popd }
+        }
+
+
+        while (( $# > 0 )); do {
+            one-prompt-at "$1"
+        } always { shift }; done
+    }
+
     case "${0##*-}" in
         (debug)  cat ~/tmp/last_prompt.info > /dev/stderr ;;
         (load|start)
+            export REFREZSH_IS_DEBUG="${REFREZSH_IS_DEBUG:-0}"
             add-zsh-hook precmd __refrezsh-prompt    ;;
         (unload|stop)
+            unset REFREZSH_IS_DEBUG
+            unset REFREZSH_MODE
             add-zsh-hook -d precmd __refrezsh-prompt
             unfunction refrezsh-debug refrezsh-unload refrezsh-load
             autoload refrezsh-load
@@ -84,14 +98,12 @@ function refrezsh-{debug,load,start,unload,stop,print} {
         (install-root)
             ;;
         (print)
+            export REFREZSH_IS_DEBUG=1
+            mkdir -p "$HOME/tmp" || export REFREZSH_IS_DEBUG=0
+
             print -- $'\e[0m\e[0;37m\e[0;40m'
             __refrezsh-prompt
-            prompt-at ..
-            prompt-at ~/git/GP/gripshape-build-automation
-            prompt-at ~/git/GP/gripshape-build-automation/gripshape-backend-web
-            prompt-at ~/git/alacritty
-            prompt-at ~/git/zsh-language
-            prompt-at ~/.dotfiles
+            prompt-at .. "$@"
             print -P "${PROMPT}_"
     esac
 }
