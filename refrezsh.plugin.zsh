@@ -11,6 +11,7 @@ source "${THEME_LIB_PATH}/git.lib.zsh"
 source "${THEME_LIB_PATH}/git.component.zsh"
 source "${THEME_LIB_PATH}/path.component.zsh"
 source "${THEME_LIB_PATH}/account.component.zsh"
+
 declare -hgx REFREZSH_MODE="${1:-print}"
 
 function __refrezsh-prompt() {
@@ -65,7 +66,9 @@ function __refrezsh-prompt() {
         darray "Git Submodules" "${repo_submodules[@]}"
         darray "Git Subtrees" "${repo_subtrees[@]}"
     }
-    debug_logs
+    if [[ "$REFREZSH_IS_DEBUG" != 0 ]]; then
+      debug_logs
+    fi
 }
 
 function refrezsh-{debug,load,start,unload,stop,print} {
