@@ -85,11 +85,12 @@ git/vcs-details() {
             store-array-slice git_props "$@"; argv=( "${new_argv[@]}" )
         }
 
-        search-git-root-for-dotgit-subtrees        
+        search-git-root-for-dotgit-subtrees
 
-        store-array-slice submod_result "$@"
-        argv=( "${new_argv[@]}" )
+        store-array-slice submod_result "$@"; argv=( "${new_argv[@]}" )
+
         typeset -gxa git_status=( "$@" )
+
     } "${${(f)$(get-gitinfo)}[@]}" || return $?
 
     local -r  REPO_CONFIG="${${(M)git_status[@]:#\#*}##\#\# }"
