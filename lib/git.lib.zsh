@@ -55,12 +55,11 @@ git/vcs-details() {
         typeset -ga new_argv=( "$@" )
     }
 
-    typeset -gA git_property_map=( ) repo_status_unstaged=( ) repo_status_staged=( )  repo_submodule_branches=( ) repo_remote_url_to_name=( ) repo_remote_name_to_url=( )
+    typeset -gA repo_status_unstaged=( ) repo_remote_url_to_name=( ) repo_submodule_branches=( ) \
+                repo_status_staged=( )   repo_remote_name_to_url=( ) git_property_map=( )
     typeset -ga repo_remotes=( ) repo_submodules=( ) repo_subtrees=( )
-    git/is-available || {
 
-        return $?
-    }
+    git/is-available || return $?
 
     local -a git_remotes=( ) git_props=( ) submod_result=( ) git_submodule_branches=( )
 
@@ -70,13 +69,15 @@ git/vcs-details() {
             print -l -- "$@" >> ~/tmp/last_prompt.info
             print -- "-------------------------------------------------" >> ~/tmp/last_prompt.info
         fi
-        local -a new_argv=( )
-        store-array-slice git_remotes "$@"
+
+        local -a new_argv=( ); store-array-slice git_remotes "$@"
         argv=( "${new_argv[@]}" )
+
         [[ "$1" == '--' ]] && { shift; typeset -gxa git_props=( ) } || {
             [[ "${argv[1]}" != 'HEAD' ]] || shift
             store-array-slice git_props "$@"; argv=( "${new_argv[@]}" )
         }
+        
         repo_subtrees=( **/.git(N/on) )
         (( ${#${(@)repo_subtrees}} == 0 )) || repo_subtrees=( ${(@)${(@)repo_subtrees##.git}:A} )
 
