@@ -39,7 +39,7 @@ function __refrezsh-prompt() {
     (( EUID == 0 )) && local PARROW="${refrezsh_icons[root-icon-fg]}${refrezsh_icons[root-icon]}" || local PARROW="${refrezsh_icons[user-icon-fg]}${refrezsh_icons[user-icon]}"
 
     if [[ -n "${SSH_CONNECTION}" ]]; then
-        local SSH_ICON=$'%{\e[38;2;240;0;25m%}'"${refrezsh_icons[ssh-icon]} ${SSH_CONNECTION%% *}:$HOST"
+        local SSH_ICON=$'%{\e[38;2;240;0;25m%}'"${refrezsh_icons[ssh-icon]} ${SSH_CONNECTION%% *}:"$'%{\e[1m}'"$HOST"
         PARROW="$SSH_ICON "$'%{\e[0;37m%}'"$PARROW"
     fi
     setopt promptsubst
